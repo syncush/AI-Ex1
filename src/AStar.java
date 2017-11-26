@@ -14,7 +14,7 @@ public class AStar {
         this.end = end;
         this.calculateEuristic();
     }
-    public ArrayList<AbstractTile> runAlgo() {
+    public ArrayList<AbstractTile> runAlgo() throws Exception {
         int size = (int) Math.sqrt(euristicMap.size());
         HashSet<AbstractTile> closedSet = new HashSet<>();
         HashSet<AbstractTile> openSet = new HashSet<>();
@@ -27,15 +27,34 @@ public class AStar {
 
         while(!openSet.isEmpty()) {
             AbstractTile tile = getLowestFromList(fScore);
-            if(this.start == this.end) {
-                //TODO Recursive path
-                return null;
+            if(tile == this.end) {
+
+                return backTracePath();
             }
             openSet.remove(tile);
             closedSet.add(tile);
             ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(size, size);
+            for (Pair<Integer, Integer> item:
+                 neighbors) {
+                AbstractTile neighbor = matrix.get(item.getKey() * size + item.getValue());
+                if(closedSet.contains(neighbor)) {
+                    continue;
+                } else {
+                    if(!openSet.contains(neighbor)) {
+                        openSet.add(neighbor);
+                    }
+                }
+                int score = gScore.get(tile) + neighbor.getCost();
+                if(score >= gScore.get(item)) {
+                    continue;
+                }
+                neighbor.cameFrom = tile;
+                gScore.put(neighbor, score);
+                fScore.put(neighbor, gScore.get(neighbor) + heuristicCostEstimate(neighbor, this.end));
+            }
 
         }
+        throw new Exception("Path not found");
 
     }
 
@@ -56,6 +75,17 @@ public class AStar {
             fScore.put(item, Integer.MAX_VALUE);
             fScore.put(item, Integer.MAX_VALUE);
         }
+    }
+
+    private ArrayList<AbstractTile> backTracePath() {
+        ArrayList<AbstractTile> path = new ArrayList<>();
+        AbstractTile temp = this.end;
+        while(temp != this.start) {
+            path.add(temp);
+            temp = temp.cameFrom;
+        }
+        path.add(this.start);
+        return path;
     }
 
     private Integer heuristicCostEstimate(AbstractTile start, AbstractTile end) {
