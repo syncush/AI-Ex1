@@ -73,7 +73,7 @@ public class AStar {
     private void doStuff(HashMap<AbstractTile, Integer> fScore, HashMap<AbstractTile, Integer> gScore) {
         for (AbstractTile item:this.matrix) {
             fScore.put(item, Integer.MAX_VALUE);
-            fScore.put(item, Integer.MAX_VALUE);
+            gScore.put(item, Integer.MAX_VALUE);
         }
     }
 
