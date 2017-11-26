@@ -6,6 +6,7 @@ abstract public  class AbstractTile implements Tile {
     protected int cost;
     protected Pair<Integer, Integer> cordinate;
     protected char represenation;
+    public AbstractTile cameFrom;
     public AbstractTile(int cost, int x, int y, char represent) {
         this.cost = cost;
         this.represenation = represent;
