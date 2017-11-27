@@ -26,9 +26,10 @@ public class AStar {
         HashMap<AbstractTile, Integer> gScore = new HashMap<>();
         doStuff(fScore, gScore);
         fScore.put(this.start , heuristicCostEstimate(this.start, this.end));
+        gScore.put(this.start, 0);
 
         while(!openSet.isEmpty()) {
-            AbstractTile tile = getLowestFromList(fScore);
+            AbstractTile tile = getLowestFromList(openSet, fScore);
             if(tile == this.end) {
 
                 return backTracePath();
@@ -62,13 +63,15 @@ public class AStar {
 
     }
 
-    private AbstractTile getLowestFromList(HashMap<AbstractTile, Integer> fScore) {
+    private AbstractTile getLowestFromList(HashSet<AbstractTile> openSet, HashMap<AbstractTile, Integer> fScore) {
         int min = Integer.MAX_VALUE / 4;
         AbstractTile temp = null;
         for (Map.Entry<AbstractTile, Integer> item: fScore.entrySet()) {
-            if(item.getValue() < min) {
-                temp = item.getKey();
-                min = item.getValue();
+            if(openSet.contains(item.getKey())) {
+                if(item.getValue() < min) {
+                    temp = item.getKey();
+                    min = item.getValue();
+                }
             }
         }
         return temp;
@@ -89,12 +92,48 @@ public class AStar {
             temp = temp.cameFrom;
         }
         path.add(this.start);
+        Collections.reverse(path);
+        int cost = 0;
+        ArrayList<String> pathString = new ArrayList<>();
+        for (int i = 0; i < path.size() - 1; i++) {
+            int deltaX = path.get(i + 1).cordinate.getKey() - path.get(i).cordinate.getKey();
+            int deltaY = path.get(i + 1).cordinate.getValue() - path.get(i).cordinate.getValue();
+            pathString.add(parseMovement(deltaX, deltaY));
+        }
         return path;
     }
 
+    private String parseMovement(int deltaX, int deltaY) {
+        if(deltaX == 1 && deltaY == 0) {
+                return "R";
+        }
+        if(deltaX == 1 && deltaY == 1) {
+            return "RD";
+        }
+        if(deltaX == -1 && deltaY == 0) {
+            return "L";
+        }
+        if(deltaX == -1 && deltaY == 1) {
+            return "LD";
+        }
+        if(deltaX == 1 && deltaY == -1) {
+            return "RU";
+        }
+        if(deltaX == -1 && deltaY == -1) {
+
+        }
+        if() {
+
+        }
+        if() {
+
+        }
+
+    }
+
     private Integer heuristicCostEstimate(AbstractTile start, AbstractTile end) {
-        return Math.abs(this.start.cordinate.getKey() - end.cordinate.getKey()) +
-                Math.abs(this.start.cordinate.getValue() - end.cordinate.getValue());
+        return Math.abs(start.cordinate.getKey() - end.cordinate.getKey()) +
+                Math.abs(start.cordinate.getValue() - end.cordinate.getValue());
     }
 
     private void calculateEuristic() {

@@ -53,11 +53,17 @@ public class Main
                 }
             }
             AStar astar = new AStar(matrix, start , end );
-            astar.runAlgo();
+            ArrayList<AbstractTile> path = astar.runAlgo();
+            for (AbstractTile item:
+                 path) {
+                System.out.print(item.getRepresentation());
+            }
 
         } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
 
         } catch (IOException ex) {
+            ex.printStackTrace();
 
         }
         catch (Exception e) {
