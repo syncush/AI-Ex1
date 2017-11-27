@@ -120,15 +120,15 @@ public class AStar {
             return "RU";
         }
         if(deltaX == -1 && deltaY == -1) {
-
+            return "LU";
         }
-        if() {
-
+        if(deltaX == 0 && deltaY == -1) {
+            return "U";
         }
-        if() {
-
+        if(deltaX == 0 && deltaY == 1) {
+            return "D";
         }
-
+        return "pie";
     }
 
     private Integer heuristicCostEstimate(AbstractTile start, AbstractTile end) {
