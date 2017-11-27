@@ -12,10 +12,12 @@ public class AStar {
         this.matrix = tiles;
         this.start = start;
         this.end = end;
-        this.calculateEuristic();
+        this.que = new PriorityQueue<>();
+        this.euristicMap = new HashMap<>();
+        //this.calculateEuristic();
     }
     public ArrayList<AbstractTile> runAlgo() throws Exception {
-        int size = (int) Math.sqrt(euristicMap.size());
+        int size = (int) Math.sqrt(matrix.size());
         HashSet<AbstractTile> closedSet = new HashSet<>();
         HashSet<AbstractTile> openSet = new HashSet<>();
         openSet.add(start);
@@ -41,11 +43,13 @@ public class AStar {
                     continue;
                 } else {
                     if(!openSet.contains(neighbor)) {
-                        openSet.add(neighbor);
+                        if(neighbor.isCrossable()) {
+                            openSet.add(neighbor);
+                        }
                     }
                 }
                 int score = gScore.get(tile) + neighbor.getCost();
-                if(score >= gScore.get(item)) {
+                if(score >= gScore.get(neighbor)) {
                     continue;
                 }
                 neighbor.cameFrom = tile;
@@ -59,7 +63,7 @@ public class AStar {
     }
 
     private AbstractTile getLowestFromList(HashMap<AbstractTile, Integer> fScore) {
-        int min = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE / 4;
         AbstractTile temp = null;
         for (Map.Entry<AbstractTile, Integer> item: fScore.entrySet()) {
             if(item.getValue() < min) {
@@ -72,8 +76,8 @@ public class AStar {
 
     private void doStuff(HashMap<AbstractTile, Integer> fScore, HashMap<AbstractTile, Integer> gScore) {
         for (AbstractTile item:this.matrix) {
-            fScore.put(item, Integer.MAX_VALUE);
-            gScore.put(item, Integer.MAX_VALUE);
+            fScore.put(item, Integer.MAX_VALUE / 4);
+            gScore.put(item, Integer.MAX_VALUE / 4);
         }
     }
 

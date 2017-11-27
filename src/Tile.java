@@ -24,4 +24,5 @@ interface Tile {
      * @return a list of pairs of it's neighbors
      */
     ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize,int yAxisSize);
+    boolean isCrossable();
 }

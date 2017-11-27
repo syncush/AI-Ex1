@@ -75,4 +75,9 @@ abstract public  class AbstractTile implements Tile {
         }
         return neighbors;
     }
+
+    @Override
+    public boolean isCrossable() {
+        return true;
+    }
 }

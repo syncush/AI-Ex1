@@ -13,4 +13,9 @@ public class WaterTile extends AbstractTile {
     public Pair<Integer, Integer> getCordinate() {
         return this.cordinate;
     }
+
+    @Override
+    public boolean isCrossable() {
+        return false;
+    }
 }
