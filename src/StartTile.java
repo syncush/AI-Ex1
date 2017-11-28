@@ -2,7 +2,7 @@ import javafx.util.Pair;
 
 public class StartTile extends AbstractTile {
     public StartTile(int x, int y)  {
-        super(3, x, y, 'S');
+        super(0, x, y, 'S');
     }
     /**
      * Getter.

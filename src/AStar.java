@@ -14,10 +14,9 @@ public class AStar {
         this.end = end;
         this.que = new PriorityQueue<>();
         this.euristicMap = new HashMap<>();
-        //this.calculateEuristic();
     }
-    public ArrayList<AbstractTile> runAlgo() throws Exception {
-        int size = (int) Math.sqrt(matrix.size());
+    public Pair<ArrayList<String>, Integer>  runAlgo() throws Exception {
+        int size = ((Double)Math.sqrt(matrix.size())).intValue();
         HashSet<AbstractTile> closedSet = new HashSet<>();
         HashSet<AbstractTile> openSet = new HashSet<>();
         openSet.add(start);
@@ -31,22 +30,21 @@ public class AStar {
         while(!openSet.isEmpty()) {
             AbstractTile tile = getLowestFromList(openSet, fScore);
             if(tile == this.end) {
-
                 return backTracePath();
             }
             openSet.remove(tile);
             closedSet.add(tile);
-            ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(size, size);
-            for (Pair<Integer, Integer> item:
-                 neighbors) {
-                AbstractTile neighbor = matrix.get(item.getKey() * size + item.getValue());
-                if(closedSet.contains(neighbor)) {
+            ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(size, this.matrix);
+            for (Pair<Integer, Integer> item: neighbors) {
+                AbstractTile neighbor = matrix.get((item.getKey()) * size + item.getValue());
+                if(closedSet.contains(neighbor) || !neighbor.isCrossable()) {
                     continue;
-                } else {
-                    if(!openSet.contains(neighbor)) {
-                        if(neighbor.isCrossable()) {
-                            openSet.add(neighbor);
-                        }
+                }
+                if(!openSet.contains(neighbor)) {
+                    if(neighbor.isCrossable()) {
+                        openSet.add(neighbor);
+                    } else {
+                        continue;
                     }
                 }
                 int score = gScore.get(tile) + neighbor.getCost();
@@ -55,19 +53,17 @@ public class AStar {
                 }
                 neighbor.cameFrom = tile;
                 gScore.put(neighbor, score);
-                fScore.put(neighbor, gScore.get(neighbor) + heuristicCostEstimate(neighbor, this.end));
+                fScore.put(neighbor, score + heuristicCostEstimate(neighbor, this.end));
             }
-
         }
         throw new Exception("Path not found");
-
     }
 
     private AbstractTile getLowestFromList(HashSet<AbstractTile> openSet, HashMap<AbstractTile, Integer> fScore) {
         int min = Integer.MAX_VALUE / 4;
         AbstractTile temp = null;
         for (Map.Entry<AbstractTile, Integer> item: fScore.entrySet()) {
-            if(openSet.contains(item.getKey())) {
+            if(openSet.contains(item.getKey()) && item.getKey().isCrossable()) {
                 if(item.getValue() < min) {
                     temp = item.getKey();
                     min = item.getValue();
@@ -84,7 +80,7 @@ public class AStar {
         }
     }
 
-    private ArrayList<AbstractTile> backTracePath() {
+    private Pair<ArrayList<String>, Integer> backTracePath() {
         ArrayList<AbstractTile> path = new ArrayList<>();
         AbstractTile temp = this.end;
         while(temp != this.start) {
@@ -99,8 +95,9 @@ public class AStar {
             int deltaX = path.get(i + 1).cordinate.getKey() - path.get(i).cordinate.getKey();
             int deltaY = path.get(i + 1).cordinate.getValue() - path.get(i).cordinate.getValue();
             pathString.add(parseMovement(deltaX, deltaY));
+            cost += path.get(i).getCost();
         }
-        return path;
+        return new Pair<>(pathString, cost);
     }
 
     private String parseMovement(int deltaX, int deltaY) {
@@ -132,15 +129,9 @@ public class AStar {
     }
 
     private Integer heuristicCostEstimate(AbstractTile start, AbstractTile end) {
-        return Math.abs(start.cordinate.getKey() - end.cordinate.getKey()) +
-                Math.abs(start.cordinate.getValue() - end.cordinate.getValue());
+        Double e =   Math.sqrt(Math.pow(start.cordinate.getKey() - end.cordinate.getKey(), 2) +
+                Math.pow(start.cordinate.getValue() - end.cordinate.getValue(), 2));
+        return e.intValue();
     }
 
-    private void calculateEuristic() {
-        for (AbstractTile item: this.matrix) {
-            int euristicValue  = Math.abs(this.start.cordinate.getKey() - item.cordinate.getKey()) +
-                                 Math.abs(this.start.cordinate.getValue() - item.cordinate.getValue());
-            this.euristicMap.put(item.cordinate, euristicValue);
-        }
-    }
 }

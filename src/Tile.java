@@ -23,6 +23,6 @@ interface Tile {
      * The function calculates his neighrbors in the matrix.
      * @return a list of pairs of it's neighbors
      */
-    ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize,int yAxisSize);
+    ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize, ArrayList<AbstractTile> list);
     boolean isCrossable();
 }

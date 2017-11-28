@@ -2,7 +2,7 @@ import javafx.util.Pair;
 
 public class FinishTile extends AbstractTile {
     public FinishTile(int x, int y)  {
-        super(3, x, y, 'G');
+        super(0, x, y, 'G');
     }
     /**
      * Getter.

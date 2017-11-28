@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -52,12 +54,14 @@ public class Main
                     y++;
                 }
             }
-            AStar astar = new AStar(matrix, start , end );
-            ArrayList<AbstractTile> path = astar.runAlgo();
-            for (AbstractTile item:
-                 path) {
-                System.out.print(item.getRepresentation());
+            AStar astar = new AStar(matrix, start , end);
+            Pair<ArrayList<String>, Integer> path = astar.runAlgo();
+            for (String item: path.getKey()) {
+                System.out.print(item);
+                System.out.print("-");
             }
+            System.out.print("\b");
+            System.out.print(" "+path.getValue());
 
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

@@ -45,33 +45,67 @@ abstract public  class AbstractTile implements Tile {
      * @return a list of pairs of it's neighbors
      */
     @Override
-    public final ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize, int yAxisSize) {
+    public final ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize, ArrayList<AbstractTile> list) {
         ArrayList<Pair<Integer, Integer>> neighbors = new ArrayList<>();
         int tempX = this.cordinate.getKey();
         int tempY = this.cordinate.getValue();
-        if(tempX - 1 >= 0) {
+        int index = (tempX - 1) * xAxisSize + tempY;
+        if(tempX - 1 >= 0 && list.get(index).isCrossable()) {
             neighbors.add(new Pair<>(tempX - 1, tempY));
         }
-        if(tempY - 1 >= 0) {
+        index = tempY - 1;
+        index += tempX * xAxisSize;
+        if(tempY - 1 >= 0 && list.get(index).isCrossable()) {
             neighbors.add(new Pair<>(tempX, tempY - 1));
         }
-        if(tempX - 1 >= 0 && tempY - 1 >= 0) {
-            neighbors.add(new Pair<>(tempX - 1, tempY - 1));
-        }
-        if(tempX + 1 < xAxisSize) {
+        index = (((tempX + 1) *xAxisSize) + tempY);
+        if(tempX + 1 < xAxisSize && list.get(index).isCrossable()) {
             neighbors.add(new Pair<>(tempX + 1, tempY));
         }
-        if(tempY + 1 < yAxisSize) {
+        index = (((tempX) *xAxisSize) + (tempY + 1));
+        if(tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
             neighbors.add(new Pair<>(tempX, tempY + 1));
         }
-        if(tempX + 1 < xAxisSize && tempY + 1 < yAxisSize) {
-            neighbors.add(new Pair<>(tempX + 1, tempY));
+        index = ((tempX + 1) * xAxisSize + (tempY + 1));
+        if(tempX + 1 < xAxisSize && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
+            index = ((tempX + 1) * xAxisSize + (tempY));
+            if(list.get(index).isCrossable()) {
+                index = ((tempX) * xAxisSize + (tempY + 1));
+                if(list.get(index).isCrossable()) {
+                    neighbors.add(new Pair<>(tempX + 1, tempY + 1));
+                }
+            }
+
         }
-        if(tempX - 1 >= 0 && tempY + 1 < yAxisSize) {
-            neighbors.add(new Pair<>(tempX - 1, tempY + 1));
+        index = ((tempX - 1) * xAxisSize + (tempY + 1));
+        if(tempX - 1 >= 0 && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
+            index = ((tempX) * xAxisSize + (tempY + 1));
+            if(list.get(index).isCrossable()) {
+                index = ((tempX - 1) * xAxisSize + tempY);
+                if (list.get(index).isCrossable()) {
+                    neighbors.add(new Pair<>(tempX - 1, tempY + 1));
+                }
+            }
         }
-        if(tempX + 1 < xAxisSize && tempY - 1 >= 0) {
-            neighbors.add(new Pair<>(tempX + 1, tempY - 1));
+        index = ((tempX + 1) * xAxisSize + (tempY - 1));
+        if(tempX + 1 < xAxisSize && tempY - 1 >= 0 && list.get(index).isCrossable()) {
+            index = ((tempX + 1) * xAxisSize + (tempY));
+            if(list.get(index).isCrossable()) {
+                index = ((tempX) * xAxisSize + (tempY - 1));
+                if(list.get(index).isCrossable()) {
+                    neighbors.add(new Pair<>(tempX + 1, tempY - 1));
+                }
+            }
+        }
+        index = ((tempX - 1) * xAxisSize) + (tempY - 1);
+        if(tempX - 1 >= 0 && tempY - 1 >= 0 && list.get(index).isCrossable()) {
+            index = ((tempX - 1) * xAxisSize) + (tempY);
+            if(list.get(index).isCrossable()) {
+                index = ((tempX) * xAxisSize) + (tempY - 1);
+                if(list.get(index).isCrossable()) {
+                    neighbors.add(new Pair<>(tempX - 1, tempY - 1));
+                }
+            }
         }
         return neighbors;
     }
