@@ -54,14 +54,20 @@ public class Main
                     y++;
                 }
             }
-            AStar astar = new AStar(matrix, start , end);
-            Pair<ArrayList<String>, Integer> path = astar.runAlgo();
-            for (String item: path.getKey()) {
-                System.out.print(item);
-                System.out.print("-");
+            if(algo.equals("IDS")) {
+                IDS ids = new IDS(matrix, start, end, size);
+                ids.runAlgo();
+            } else {
+                AStar astar = new AStar(matrix, start , end);
+                Pair<ArrayList<String>, Integer> path = astar.runAlgo();
+                for (String item: path.getKey()) {
+                    System.out.print(item);
+                    System.out.print("-");
+                }
+                System.out.print("\b");
+                System.out.print(" "+path.getValue());
             }
-            System.out.print("\b");
-            System.out.print(" "+path.getValue());
+
 
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

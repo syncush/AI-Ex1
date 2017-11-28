@@ -152,7 +152,7 @@ public class AStar {
 
     private String parseMovement(int deltaX, int deltaY) {
         if(deltaX == 1 && deltaY == 0) {
-                return "D";
+            return "D";
         }
         if(deltaX == 1 && deltaY == 1) {
             return "RD";
