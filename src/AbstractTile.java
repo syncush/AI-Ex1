@@ -52,28 +52,17 @@ abstract public  class AbstractTile implements  Tile {
         ArrayList<Pair<Integer, Integer>> neighbors = new ArrayList<>();
         int tempX = this.cordinate.getKey();
         int tempY = this.cordinate.getValue();
+        int index;
 
-        int index = (tempX - 1) * xAxisSize + tempY;
-        if(tempX - 1 >= 0 && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX - 1, tempY));
-        }
 
-        index = tempY - 1;
-        index += tempX * xAxisSize;
-        if(tempY - 1 >= 0 && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX, tempY - 1));
-        }
-
-        index = (((tempX + 1) *xAxisSize) + tempY);
-        if(tempX + 1 < xAxisSize && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX + 1, tempY));
-        }
-
+        //RIGHT
         index = (((tempX) *xAxisSize) + (tempY + 1));
         if(tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
             neighbors.add(new Pair<>(tempX, tempY + 1));
         }
 
+
+        //RightDown
         index = ((tempX + 1) * xAxisSize + (tempY + 1));
         if(tempX + 1 < xAxisSize && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
             index = ((tempX + 1) * xAxisSize + (tempY));
@@ -83,20 +72,16 @@ abstract public  class AbstractTile implements  Tile {
                     neighbors.add(new Pair<>(tempX + 1, tempY + 1));
                 }
             }
-
         }
 
-        index = ((tempX - 1) * xAxisSize + (tempY + 1));
-        if(tempX - 1 >= 0 && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
-            index = ((tempX) * xAxisSize + (tempY + 1));
-            if(list.get(index).isCrossable()) {
-                index = ((tempX - 1) * xAxisSize + tempY);
-                if (list.get(index).isCrossable()) {
-                    neighbors.add(new Pair<>(tempX - 1, tempY + 1));
-                }
-            }
+        //Down
+        index = (((tempX + 1) * xAxisSize) + tempY);
+        if(tempX + 1 < xAxisSize && list.get(index).isCrossable()) {
+            neighbors.add(new Pair<>(tempX + 1, tempY));
         }
 
+
+        //LeftDown
         index = ((tempX + 1) * xAxisSize + (tempY - 1));
         if(tempX + 1 < xAxisSize && tempY - 1 >= 0 && list.get(index).isCrossable()) {
             index = ((tempX + 1) * xAxisSize + (tempY));
@@ -108,6 +93,14 @@ abstract public  class AbstractTile implements  Tile {
             }
         }
 
+        //LEFT
+        index = tempY - 1;
+        index += tempX * xAxisSize;
+        if(tempY - 1 >= 0 && list.get(index).isCrossable()) {
+            neighbors.add(new Pair<>(tempX, tempY - 1));
+        }
+
+        //UpLeft
         index = ((tempX - 1) * xAxisSize) + (tempY - 1);
         if(tempX - 1 >= 0 && tempY - 1 >= 0 && list.get(index).isCrossable()) {
             index = ((tempX - 1) * xAxisSize) + (tempY);
@@ -115,6 +108,24 @@ abstract public  class AbstractTile implements  Tile {
                 index = ((tempX) * xAxisSize) + (tempY - 1);
                 if(list.get(index).isCrossable()) {
                     neighbors.add(new Pair<>(tempX - 1, tempY - 1));
+                }
+            }
+        }
+
+        //UP
+        index = (tempX - 1) * xAxisSize + tempY;
+        if(tempX - 1 >= 0 && list.get(index).isCrossable()) {
+            neighbors.add(new Pair<>(tempX - 1, tempY));
+        }
+
+        //UpRight
+        index = ((tempX - 1) * xAxisSize + (tempY + 1));
+        if(tempX - 1 >= 0 && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
+            index = ((tempX) * xAxisSize + (tempY + 1));
+            if(list.get(index).isCrossable()) {
+                index = ((tempX - 1) * xAxisSize + tempY);
+                if (list.get(index).isCrossable()) {
+                    neighbors.add(new Pair<>(tempX - 1, tempY + 1));
                 }
             }
         }

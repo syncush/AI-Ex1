@@ -10,6 +10,7 @@ public class IDS {
     private AbstractTile end;
     ArrayList<AbstractTile> matrix;
     private int size;
+    ArrayList<AbstractTile> finalPath;
 
     public IDS(ArrayList<AbstractTile> tiles, AbstractTile start, AbstractTile end, int size)  {
         this.matrix = tiles;
@@ -18,30 +19,32 @@ public class IDS {
         this.size = size;
     }
 
-    public AbstractTile runAlgo() {
-        List<AbstractTile> path = new ArrayList<>();
+    public ArrayList<AbstractTile> runAlgo() {
+        ArrayList<AbstractTile> path = new ArrayList<>();
+        path.add(this.start);
         for (int i = 0; i < this.size * this.size; i++) {
-            AbstractTile tile = runDLS(this.start ,i);
+            AbstractTile tile = runDLS(path ,this.start ,i);
             if(tile != null) {
-                return tile;
+                return this.finalPath;
             }
         }
-        int x = 5;
         return null;
-
     }
 
-    private AbstractTile runDLS(AbstractTile tile, int depth) {
+    private AbstractTile runDLS(ArrayList<AbstractTile> path, AbstractTile tile, int depth) {
         if(depth == 0 && tile == this.end) {
+            finalPath = path;
             return this.end;
         }
         if(depth > 0) {
             ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(this.size, this.matrix);
             for(Pair<Integer, Integer> item: neighbors) {
                 AbstractTile neighbor = this.matrix.get((item.getKey() * this.size) + item.getValue());
-                AbstractTile found = runDLS(neighbor, --depth);
+                ArrayList<AbstractTile> newPath = new ArrayList<>(path);
+                newPath.add(neighbor);
+                AbstractTile found = runDLS(newPath,neighbor, --depth);
                 if(found != null) {
-                    found.cameFrom = neighbor;
+                    found.cameFrom = tile;
                     return found;
                 }
             }
