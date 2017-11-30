@@ -2,62 +2,64 @@ import javafx.util.Pair;
 
 import java.util.*;
 public class AStar {
-    private PriorityQueue<AbstractTile> que;
     private AbstractTile start;
     private AbstractTile end;
-    ArrayList<AbstractTile> matrix;
-    Map<Pair<Integer, Integer>, Integer> euristicMap;
     HashMap<AbstractTile, Double> hScore;
 
-    public AStar(ArrayList<AbstractTile> tiles, AbstractTile start, AbstractTile end)  {
-        this.matrix = tiles;
-        this.start = start;
-        this.end = end;
-        this.que = new PriorityQueue<>();
-        this.euristicMap = new HashMap<>();
+    public AStar(AbstractTile start, AbstractTile end)  {
+        this.start = Main.start;
+        this.end = Main.end;
     }
     public Pair<ArrayList<String>, Integer>  runAlgo() throws Exception {
         hScore = new HashMap<>();
-        int size = ((Double)Math.sqrt(matrix.size())).intValue();
         HashSet<AbstractTile> closedSet = new HashSet<>();
         HashSet<AbstractTile> openSet = new HashSet<>();
+
+        int size = Main.matirx[0].length;
+
+
         openSet.add(start);
         this.start.timeDiscovered = 1;
+
+
         HashMap<AbstractTile, Double> fScore = new HashMap<>();
         HashMap<AbstractTile, Double> gScore = new HashMap<>();
-        doStuff(hScore, gScore);
-        fScore.put(this.start , heuristicCostEstimate(this.start, this.end));
-        gScore.put(this.start, 0.0);
-        hScore.put(this.start, heuristicCostEstimate(this.start, this.end));
+        //doStuff(hScore, gScore);
+
+        fScore.put(Main.start , heuristicCostEstimate(Main.start, Main.end));
+        gScore.put(Main.start, 0.0);
+        hScore.put(Main.start, heuristicCostEstimate(Main.start, Main.end));
 
         while(!openSet.isEmpty()) {
             AbstractTile tile = getLowestFromList(openSet, fScore, gScore);
-            if(tile == this.end) {
+            if(tile.equals(Main.end)) {
                 return backTracePath();
             }
             openSet.remove(tile);
             closedSet.add(tile);
-            ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(size, this.matrix);
-            for (Pair<Integer, Integer> item: neighbors) {
-                AbstractTile neighbor = matrix.get((item.getKey()) * size + item.getValue());
-                if(closedSet.contains(neighbor)) {
+
+            ArrayList<AbstractTile> neighbors = tile.getNeighbors(size, Main.matirx);
+            for (AbstractTile item: neighbors) {
+                if(closedSet.contains(item)) {
                     continue;
                 }
-                if(!openSet.contains(neighbor)) {
-                        if(neighbor.timeDiscovered == 0) {
-                            neighbor.timeDiscovered += tile.timeDiscovered + 1;
+                if(!openSet.contains(item)) {
+                        if(item.timeDiscovered == 0) {
+                            item.timeDiscovered += tile.timeDiscovered + 1;
                         }
-                        openSet.add(neighbor);
+                        fScore.put(item, Double.MAX_VALUE / 4);
+                        gScore.put(item, Double.MAX_VALUE / 4);
+                        openSet.add(item);
                 }
-                Double score = gScore.get(tile) + neighbor.getCost();
-                if(score >= gScore.get(neighbor)) {
+                Double score = gScore.get(tile) + item.getCost();
+                if(score >= gScore.get(item)) {
                     continue;
                 }
-                neighbor.cameFrom = tile;
-                neighbor.cameFromDirection = parseDirection(tile, neighbor);
-                gScore.put(neighbor, score);
-                hScore.put(neighbor, heuristicCostEstimate(neighbor, this.end));
-                fScore.put(neighbor, score + heuristicCostEstimate(neighbor, this.end));
+                item.cameFrom = tile;
+                item.cameFromDirection = parseDirection(tile, item);
+                gScore.put(item, score);
+                hScore.put(item, heuristicCostEstimate(item, Main.end));
+                fScore.put(item, score + heuristicCostEstimate(item, Main.end));
             }
         }
         throw new Exception("no path");
@@ -122,22 +124,23 @@ public class AStar {
         }
         return temp;
     }
-
+    /**
     private void doStuff(HashMap<AbstractTile, Double> fScore, HashMap<AbstractTile, Double> gScore) {
         for (AbstractTile item:this.matrix) {
             fScore.put(item, Double.MAX_VALUE / 4);
             gScore.put(item, Double.MAX_VALUE / 4);
         }
     }
+     **/
 
     private Pair<ArrayList<String>, Integer> backTracePath() {
         ArrayList<AbstractTile> path = new ArrayList<>();
         AbstractTile temp = this.end;
-        while(temp != this.start) {
+        while(!temp.equals(Main.start)) {
             path.add(temp);
             temp = temp.cameFrom;
         }
-        path.add(this.start);
+        path.add(Main.start);
         Collections.reverse(path);
         int cost = 0;
         ArrayList<String> pathString = new ArrayList<>();

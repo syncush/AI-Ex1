@@ -1,7 +1,5 @@
 import javafx.util.Pair;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 
 abstract public  class AbstractTile implements  Tile {
     protected int cost;
@@ -13,7 +11,7 @@ abstract public  class AbstractTile implements  Tile {
     public AbstractTile(int cost, int x, int y, char represent) {
         this.cost = cost;
         this.represenation = represent;
-        this.cordinate = new Pair<>(x, y);
+        this.cordinate = new Pair<Integer, Integer>(x, y);
     }
     /**
      * Getter
@@ -34,6 +32,18 @@ abstract public  class AbstractTile implements  Tile {
         return this.represenation;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        AbstractTile that = (AbstractTile) o;
+        if(cordinate.getKey() == that.getCordinate().getKey() && cordinate.getValue() == that.getCordinate().getValue()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Getter.
      *
@@ -48,84 +58,65 @@ abstract public  class AbstractTile implements  Tile {
      * @return a list of pairs of it's neighbors
      */
     @Override
-    public final ArrayList<Pair<Integer, Integer>> getNeighbors(int xAxisSize, ArrayList<AbstractTile> list) {
-        ArrayList<Pair<Integer, Integer>> neighbors = new ArrayList<>();
+    public final ArrayList<AbstractTile> getNeighbors(int xAxisSize, char[][] matrix) {
+        ArrayList<AbstractTile> neighbors = new ArrayList<>();
         int tempX = this.cordinate.getKey();
         int tempY = this.cordinate.getValue();
-        int index;
-
 
         //RIGHT
-        index = (((tempX) *xAxisSize) + (tempY + 1));
-        if(tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX, tempY + 1));
+        if(tempY + 1 < xAxisSize && matrix[tempX][tempY + 1] != 'W') {
+            neighbors.add(parseChar(matrix[tempX][tempY + 1], tempX, tempY + 1));
         }
 
 
         //RightDown
-        index = ((tempX + 1) * xAxisSize + (tempY + 1));
-        if(tempX + 1 < xAxisSize && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
-            index = ((tempX + 1) * xAxisSize + (tempY));
-            if(list.get(index).isCrossable()) {
-                index = ((tempX) * xAxisSize + (tempY + 1));
-                if(list.get(index).isCrossable()) {
-                    neighbors.add(new Pair<>(tempX + 1, tempY + 1));
+        if(tempX + 1 < xAxisSize && tempY + 1 < xAxisSize && matrix[tempX + 1][tempY + 1] != 'W') {
+            if(matrix[tempX + 1][tempY] != 'W') {
+                if(matrix[tempX][tempY + 1] != 'W') {
+                    neighbors.add(parseChar(matrix[tempX + 1][tempY + 1], tempX + 1, tempY + 1));
                 }
             }
         }
 
         //Down
-        index = (((tempX + 1) * xAxisSize) + tempY);
-        if(tempX + 1 < xAxisSize && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX + 1, tempY));
+        if(tempX + 1 < xAxisSize && matrix[tempX + 1][tempY] != 'W') {
+            neighbors.add(parseChar(matrix[tempX + 1][tempY], tempX + 1, tempY));
         }
 
 
         //LeftDown
-        index = ((tempX + 1) * xAxisSize + (tempY - 1));
-        if(tempX + 1 < xAxisSize && tempY - 1 >= 0 && list.get(index).isCrossable()) {
-            index = ((tempX + 1) * xAxisSize + (tempY));
-            if(list.get(index).isCrossable()) {
-                index = ((tempX) * xAxisSize + (tempY - 1));
-                if(list.get(index).isCrossable()) {
-                    neighbors.add(new Pair<>(tempX + 1, tempY - 1));
+        if(tempX + 1 < xAxisSize && tempY - 1 >= 0 && matrix[tempX + 1][tempY - 1] != 'W') {
+            if(matrix[tempX + 1][tempY] != 'W') {
+                if(matrix[tempX][tempY - 1] != 'W') {
+                    neighbors.add(parseChar(matrix[tempX + 1][tempY - 1], tempX + 1, tempY - 1));
                 }
             }
         }
 
         //LEFT
-        index = tempY - 1;
-        index += tempX * xAxisSize;
-        if(tempY - 1 >= 0 && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX, tempY - 1));
+        if(tempY - 1 >= 0 && matrix[tempX][tempY - 1] != 'W') {
+            neighbors.add(parseChar(matrix[tempX][tempY - 1], tempX, tempY - 1));
         }
 
         //UpLeft
-        index = ((tempX - 1) * xAxisSize) + (tempY - 1);
-        if(tempX - 1 >= 0 && tempY - 1 >= 0 && list.get(index).isCrossable()) {
-            index = ((tempX - 1) * xAxisSize) + (tempY);
-            if(list.get(index).isCrossable()) {
-                index = ((tempX) * xAxisSize) + (tempY - 1);
-                if(list.get(index).isCrossable()) {
-                    neighbors.add(new Pair<>(tempX - 1, tempY - 1));
+        if(tempX - 1 >= 0 && tempY - 1 >= 0 && matrix[tempX - 1][tempY - 1] != 'W') {
+            if(matrix[tempX - 1][tempY] != 'W') {
+                if(matrix[tempX][tempY - 1] != 'W') {
+                    neighbors.add(parseChar(matrix[tempX - 1][tempY - 1], tempX - 1, tempY - 1));
                 }
             }
         }
 
         //UP
-        index = (tempX - 1) * xAxisSize + tempY;
-        if(tempX - 1 >= 0 && list.get(index).isCrossable()) {
-            neighbors.add(new Pair<>(tempX - 1, tempY));
+        if(tempX - 1 >= 0 && matrix[tempX - 1][tempY] != 'W') {
+            neighbors.add(parseChar(matrix[tempX - 1][tempY], tempX - 1, tempY));
         }
 
         //UpRight
-        index = ((tempX - 1) * xAxisSize + (tempY + 1));
-        if(tempX - 1 >= 0 && tempY + 1 < xAxisSize && list.get(index).isCrossable()) {
-            index = ((tempX) * xAxisSize + (tempY + 1));
-            if(list.get(index).isCrossable()) {
-                index = ((tempX - 1) * xAxisSize + tempY);
-                if (list.get(index).isCrossable()) {
-                    neighbors.add(new Pair<>(tempX - 1, tempY + 1));
+        if(tempX - 1 >= 0 && tempY + 1 < xAxisSize && matrix[tempX - 1][tempY + 1] != 'W') {
+            if(matrix[tempX][tempY + 1] != 'W') {
+                if (matrix[tempX - 1][tempY] != 'W') {
+                    neighbors.add(parseChar(matrix[tempX - 1][tempY + 1], tempX - 1, tempY + 1));
                 }
             }
         }
@@ -135,5 +126,33 @@ abstract public  class AbstractTile implements  Tile {
     @Override
     public boolean isCrossable() {
         return true;
+    }
+
+    private AbstractTile parseChar(char c, int x, int y) {
+        switch(c) {
+            case 'S': {
+                return Main.start;
+            }
+
+            case 'G': {
+                return Main.end;
+            }
+
+            case 'R': {
+                return new RoadTile(x, y);
+            }
+
+            case 'D': {
+                return new FieldTile(x,y);
+            }
+
+            case 'H': {
+                return new HillTile(x, y);
+            }
+
+            default: {
+            }
+        }
+        return null;
     }
 }

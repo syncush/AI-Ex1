@@ -1,54 +1,88 @@
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class IDS {
     private AbstractTile start;
     private AbstractTile end;
-    ArrayList<AbstractTile> matrix;
-    private int size;
-    ArrayList<AbstractTile> finalPath;
+    private ArrayList<AbstractTile> finalPath;
+    private ArrayList<AbstractTile> duplicateList;
 
-    public IDS(ArrayList<AbstractTile> tiles, AbstractTile start, AbstractTile end, int size)  {
-        this.matrix = tiles;
-        this.start = start;
-        this.end = end;
-        this.size = size;
+    public IDS()  {
+        this.start = Main.start;
+        this.end = Main.end;
+        duplicateList = new ArrayList<>();
     }
 
-    public ArrayList<AbstractTile> runAlgo() {
+    public Pair<ArrayList<String>, Integer> runAlgo() {
+        int size = Main.matirx[0].length * Main.matirx[0].length;
         ArrayList<AbstractTile> path = new ArrayList<>();
         path.add(this.start);
-        for (int i = 0; i < this.size * this.size; i++) {
-            AbstractTile tile = runDLS(path ,this.start ,i);
-            if(tile != null) {
-                return this.finalPath;
+        for (int i = 0; i < size; i++) {
+            if(runDLS(Main.start,Main.end, i, path)) {
+                return backTracePath();
             }
         }
         return null;
     }
 
-    private AbstractTile runDLS(ArrayList<AbstractTile> path, AbstractTile tile, int depth) {
-        if(depth == 0 && tile == this.end) {
-            finalPath = path;
-            return this.end;
+    private Pair<ArrayList<String>, Integer> backTracePath() {
+        int cost = 0;
+        ArrayList<String> pathString = new ArrayList<>();
+        int size = this.finalPath.size();
+        for (int i = 0; i < size - 1; i++) {
+            int deltaX = this.finalPath.get(i + 1).cordinate.getKey() - this.finalPath.get(i).cordinate.getKey();
+            int deltaY = this.finalPath.get(i + 1).cordinate.getValue() - this.finalPath.get(i).cordinate.getValue();
+            pathString.add(parseMovement(deltaX, deltaY));
+            cost += this.finalPath.get(i).getCost();
         }
-        if(depth > 0) {
-            ArrayList<Pair<Integer, Integer>> neighbors = tile.getNeighbors(this.size, this.matrix);
-            for(Pair<Integer, Integer> item: neighbors) {
-                AbstractTile neighbor = this.matrix.get((item.getKey() * this.size) + item.getValue());
-                ArrayList<AbstractTile> newPath = new ArrayList<>(path);
-                newPath.add(neighbor);
-                AbstractTile found = runDLS(newPath,neighbor, --depth);
-                if(found != null) {
-                    found.cameFrom = tile;
-                    return found;
-                }
+        return new Pair<>(pathString, cost);
+    }
+
+    private String parseMovement(int deltaX, int deltaY) {
+        if(deltaX == 1 && deltaY == 0) {
+            return "D";
+        }
+        if(deltaX == 1 && deltaY == 1) {
+            return "RD";
+        }
+        if(deltaX == -1 && deltaY == 0) {
+            return "L";
+        }
+        if(deltaX == -1 && deltaY == 1) {
+            return "LD";
+        }
+        if(deltaX == 1 && deltaY == -1) {
+            return "RU";
+        }
+        if(deltaX == -1 && deltaY == -1) {
+            return "LU";
+        }
+        if(deltaX == 0 && deltaY == -1) {
+            return "U";
+        }
+        if(deltaX == 0 && deltaY == 1) {
+            return "R";
+        }
+        return "pie";
+    }
+
+    private boolean runDLS(AbstractTile start, AbstractTile end, int depth, ArrayList<AbstractTile> trackBack) {
+        if(start.equals(end)) {
+            this.finalPath = trackBack;
+            return true;
+        }
+        if(depth <= 0) {
+            return false;
+        }
+        ArrayList<AbstractTile> neighbors = start.getNeighbors(Main.matirx[0].length, Main.matirx);
+        for (AbstractTile item: neighbors) {
+            ArrayList<AbstractTile> newPath = new ArrayList<>(trackBack);
+            newPath.add(item);
+            if(runDLS(item, end, depth - 1, newPath)) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 }

@@ -1,74 +1,52 @@
 import javafx.util.Pair;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class Main
-{
-    public static void main(String [] args)
-    {
-
+public class Main {
+    static char[][] matirx;
+    static AbstractTile start = null;
+    static AbstractTile end = null;
+    public static void main(String[] args) {
         try {
             BufferedReader fileStream = new BufferedReader(new FileReader(args[0]));
             String algo = fileStream.readLine();
             int size = Integer.parseInt(fileStream.readLine());
-            ArrayList<AbstractTile> matrix = new ArrayList<>();
-            AbstractTile start = null;
-            AbstractTile end = null;
+            Main.matirx = new char[size][size];
             for (int i = 0 ; i < size; i++) {
-                String temp = fileStream.readLine();
-                int y = 0;
-                for (char item: temp.toCharArray()) {
-                    switch(item) {
-                        case 'S': {
-                            start = new StartTile(i, y);
-                            matrix.add(start);
-
-                        } break;
-
-                        case 'G': {
-                            end = new FinishTile(i, y);
-                            matrix.add(end);
-                        } break;
-
-                        case 'R': {
-                            matrix.add(new RoadTile(i, y));
-                        } break;
-
-                        case 'D': {
-                            matrix.add(new FieldTile(i, y));
-                        } break;
-
-                        case 'H': {
-                            matrix.add(new HillTile(i, y));
-                        } break;
-
-                        case 'W': {
-                            matrix.add(new WaterTile(i, y));
-                        } break;
-
-                        default: {
-
-                        }
+                String tiles = fileStream.readLine();
+                for (int j = 0; j < size; j++) {
+                    if(tiles.charAt(j) == 'S') {
+                        start = new StartTile(i, j);
                     }
-                    y++;
+                    if(tiles.charAt(j) == 'G') {
+                        end = new FinishTile(i, j);
+                    }
+                    matirx[i][j] = tiles.charAt(j);
                 }
             }
             if(algo.equals("IDS")) {
-                IDS ids = new IDS(matrix, start, end, size);
-                ids.runAlgo();
-            } else {
-                AStar astar = new AStar(matrix, start , end);
-                Pair<ArrayList<String>, Integer> path = astar.runAlgo();
-                for (String item: path.getKey()) {
+                IDS ids = new IDS();
+                Pair<ArrayList<String>, Integer> finalSolution = ids.runAlgo();
+                for (String item: finalSolution.getKey()) {
                     System.out.print(item);
                     System.out.print("-");
                 }
                 System.out.print("\b");
-                System.out.print(" "+path.getValue());
+                System.out.print(" " + finalSolution.getValue());
+            } else {
+                AStar astar = new AStar(start, end);
+                Pair<ArrayList<String>, Integer> finalSolution = astar.runAlgo();
+                for (String item: finalSolution.getKey()) {
+                    System.out.print(item);
+                    System.out.print("-");
+                }
+                System.out.print("\b");
+                System.out.print(" " + finalSolution.getValue());
             }
-
-
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
 
@@ -80,8 +58,5 @@ public class Main
             e.printStackTrace();
 
         }
-
-
     }
-
 }
