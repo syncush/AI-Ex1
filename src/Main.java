@@ -1,9 +1,6 @@
 import javafx.util.Pair;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -31,21 +28,32 @@ public class Main {
             if(algo.equals("IDS")) {
                 IDS ids = new IDS();
                 Pair<ArrayList<String>, Integer> finalSolution = ids.runAlgo();
+                String finalSolString ="";
                 for (String item: finalSolution.getKey()) {
-                    System.out.print(item);
-                    System.out.print("-");
+                    finalSolString += item;
+                    finalSolString += '-';
                 }
-                System.out.print("\b");
-                System.out.print(" " + finalSolution.getValue());
+                int index = finalSolString.lastIndexOf('-');
+
+                finalSolString += finalSolution.getValue();
+                StringBuilder sBuilder = new StringBuilder(finalSolString);
+                sBuilder.setCharAt(index,' ');
+                PrintWriter writer = new PrintWriter("output.txt");
+                writer.println(finalSolString);
+                writer.close();
             } else {
                 AStar astar = new AStar(start, end);
                 Pair<ArrayList<String>, Integer> finalSolution = astar.runAlgo();
+                String finalSolString ="";
                 for (String item: finalSolution.getKey()) {
-                    System.out.print(item);
-                    System.out.print("-");
+                    finalSolString += item;
+                    finalSolString += '-';
                 }
-                System.out.print("\b");
-                System.out.print(" " + finalSolution.getValue());
+                finalSolString += '\b';
+                finalSolString += ' ' + finalSolution.getValue();
+                PrintWriter writer = new PrintWriter("output.txt");
+                writer.println(finalSolString);
+                writer.close();
             }
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
