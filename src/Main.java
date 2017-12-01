@@ -38,7 +38,7 @@ public class Main {
                 finalSolString += finalSolution.getValue();
                 StringBuilder sBuilder = new StringBuilder(finalSolString);
                 sBuilder.setCharAt(index,' ');
-                PrintWriter writer = new PrintWriter("output.txt");
+                PrintWriter writer = new PrintWriter("myoutput.txt");
                 writer.println(finalSolString);
                 writer.close();
             } else {
@@ -49,9 +49,12 @@ public class Main {
                     finalSolString += item;
                     finalSolString += '-';
                 }
-                finalSolString += '\b';
-                finalSolString += ' ' + finalSolution.getValue();
-                PrintWriter writer = new PrintWriter("output.txt");
+                int index = finalSolString.lastIndexOf('-');
+
+                finalSolString += finalSolution.getValue();
+                StringBuilder sBuilder = new StringBuilder(finalSolString);
+                sBuilder.setCharAt(index,' ');
+                PrintWriter writer = new PrintWriter("myoutput.txt");
                 writer.println(finalSolString);
                 writer.close();
             }
