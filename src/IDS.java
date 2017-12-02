@@ -15,14 +15,12 @@ public class IDS {
     }
 
     public Pair<ArrayList<String>, Integer> runAlgo() {
-        int size = Main.matirx[0].length * Main.matirx[0].length;
+        int size = Main.matrix[0].length * Main.matrix[0].length;
         ArrayList<AbstractTile> path = new ArrayList<>();
-        ArrayList<AbstractTile> pruneList = new ArrayList<>();
         path.add(this.start);
         for (int i = 0; i < size; i++) {
-            pruneList.clear();
-            pruneList.add(Main.start);
-            if(runDLS(Main.start,Main.end, i, path, pruneList)) {
+            duplicateList.add(Main.start);
+            if(runDLS(Main.start,Main.end, i, path)) {
                 return backTracePath();
             }
         }
@@ -70,26 +68,28 @@ public class IDS {
         return "pie";
     }
 
-    private boolean runDLS(AbstractTile start, AbstractTile end, int depth, ArrayList<AbstractTile> trackBack,ArrayList<AbstractTile> pruneList) {
-        if(start.equals(end)) {
+    private boolean runDLS(AbstractTile start, AbstractTile end, int depth, ArrayList<AbstractTile> trackBack) {
+        if (start.equals(end)) {
             this.finalPath = trackBack;
             return true;
         }
-        if(depth <= 0) {
+        if (depth <= 0) {
+            duplicateList.remove(start);
             return false;
         }
-        ArrayList<AbstractTile> neighbors = start.getNeighbors(Main.matirx[0].length, Main.matirx);
-        for (AbstractTile item: neighbors) {
-            ArrayList<AbstractTile> newPath = new ArrayList<>(trackBack);
-            ArrayList<AbstractTile> newPrune = new ArrayList<>(pruneList);
-            newPath.add(item);
-            if(!pruneList.contains(item)) {
-                pruneList.add(item);
-                if(runDLS(item, end, depth - 1, newPath, newPrune)) {
+        ArrayList<AbstractTile> neighbors = start.getNeighbors(Main.matrix[0].length, Main.matrix);
+        for (AbstractTile item : neighbors) {
+            if (!duplicateList.contains(item)) {
+                duplicateList.add(item);
+                ArrayList<AbstractTile> newPath = new ArrayList<>(trackBack);
+                newPath.add(item);
+                if (runDLS(item, end, depth - 1, newPath)) {
                     return true;
                 }
             }
+
         }
+        duplicateList.remove(start);
         return false;
     }
 }

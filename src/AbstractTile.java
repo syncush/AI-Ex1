@@ -11,6 +11,7 @@ abstract public  class AbstractTile implements  Tile {
     public AbstractTile(int cost, int x, int y, char represent) {
         this.cost = cost;
         this.represenation = represent;
+        this.timeDiscovered = 0;
         this.cordinate = new Pair<Integer, Integer>(x, y);
     }
     /**
