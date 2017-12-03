@@ -15,7 +15,7 @@ public class AStar {
         HashSet<AbstractTile> closedSet = new HashSet<>();
         HashSet<AbstractTile> openSet = new HashSet<>();
 
-        int size = Main.matirx[0].length;
+        int size = Main.matrix[0].length;
 
 
         openSet.add(start);
@@ -38,7 +38,7 @@ public class AStar {
             openSet.remove(tile);
             closedSet.add(tile);
 
-            ArrayList<AbstractTile> neighbors = tile.getNeighbors(size, Main.matirx);
+            ArrayList<AbstractTile> neighbors = tile.getNeighbors(size, Main.matrix);
             for (AbstractTile item: neighbors) {
                 if(closedSet.contains(item)) {
                     continue;
