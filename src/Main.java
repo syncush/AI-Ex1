@@ -29,13 +29,18 @@ public class Main {
                 IDS ids = new IDS();
                 Pair<ArrayList<String>, Integer> finalSolution = ids.runAlgo();
                 if(finalSolution == null) {
-                    int x = 5;
+                    String finalSolString ="no path";
+                    PrintWriter pWriter = new PrintWriter("myoutput.txt");
+                    pWriter.println(finalSolString);
+                    pWriter.close();
+                    return;
                 }
                 String finalSolString ="";
                 for (String item: finalSolution.getKey()) {
                     finalSolString += item;
                     finalSolString += '-';
                 }
+
 
 
                 finalSolString += finalSolution.getValue();
@@ -48,6 +53,13 @@ public class Main {
             } else {
                 AStar astar = new AStar(start, end);
                 Pair<ArrayList<String>, Integer> finalSolution = astar.runAlgo();
+                if(finalSolution == null) {
+                    String finalSolString ="no path";
+                    PrintWriter pWriter = new PrintWriter("myoutput.txt");
+                    pWriter.println(finalSolString);
+                    pWriter.close();
+                    return;
+                }
                 String finalSolString ="";
                 for (String item: finalSolution.getKey()) {
                     finalSolString += item;
