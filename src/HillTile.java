@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 
 public class HillTile extends AbstractTile {
     public HillTile(int x, int y)  {

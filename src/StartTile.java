@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 
 public class StartTile extends AbstractTile {
     public StartTile(int x, int y)  {

@@ -1,4 +1,4 @@
-import javafx.util.Pair;
+
 
 public class FinishTile extends AbstractTile {
     public FinishTile(int x, int y)  {

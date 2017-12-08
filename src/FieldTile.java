@@ -1,4 +1,4 @@
-import javafx.util.Pair;
+
 
 public class FieldTile extends AbstractTile {
     public FieldTile(int x, int y)  {

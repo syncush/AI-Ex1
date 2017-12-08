@@ -1,4 +1,4 @@
-import javafx.util.Pair;
+
 import java.util.ArrayList;
 
 abstract public  class AbstractTile implements  Tile {
@@ -8,11 +8,15 @@ abstract public  class AbstractTile implements  Tile {
     public AbstractTile cameFrom;
     public int timeDiscovered = 0;
     public PLACE cameFromDirection;
+    public Double huristicCost;
+    public Double groundCost;
     public AbstractTile(int cost, int x, int y, char represent) {
         this.cost = cost;
         this.represenation = represent;
         this.timeDiscovered = 0;
         this.cordinate = new Pair<Integer, Integer>(x, y);
+        this.groundCost = Double.MAX_VALUE / 4;
+        this.huristicCost = Double.MAX_VALUE / 4;
     }
     /**
      * Getter
@@ -132,11 +136,11 @@ abstract public  class AbstractTile implements  Tile {
     private AbstractTile parseChar(char c, int x, int y) {
         switch(c) {
             case 'S': {
-                return Main.start;
+                return java_ex1.start;
             }
 
             case 'G': {
-                return Main.end;
+                return java_ex1.end;
             }
 
             case 'R': {

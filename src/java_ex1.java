@@ -1,18 +1,21 @@
-import javafx.util.Pair;
-
 import java.io.*;
 import java.util.ArrayList;
 
-public class Main {
+public class java_ex1 {
     static char[][] matrix;
     static AbstractTile start = null;
     static AbstractTile end = null;
+
+    /**
+     * Main function which gets a file and runs the specified algorithm
+     * @param args file path is in args[0]
+     */
     public static void main(String[] args) {
         try {
-            BufferedReader fileStream = new BufferedReader(new FileReader(args[0]));
+            BufferedReader fileStream = new BufferedReader(new FileReader("input.txt"));
             String algo = fileStream.readLine();
             int size = Integer.parseInt(fileStream.readLine());
-            Main.matrix = new char[size][size];
+            java_ex1.matrix = new char[size][size];
             for (int i = 0 ; i < size; i++) {
                 String tiles = fileStream.readLine();
                 for (int j = 0; j < size; j++) {
@@ -29,8 +32,8 @@ public class Main {
                 IDS ids = new IDS();
                 Pair<ArrayList<String>, Integer> finalSolution = ids.runAlgo();
                 if(finalSolution == null) {
-                    String finalSolString ="no path";
-                    PrintWriter pWriter = new PrintWriter("myoutput.txt");
+                    String finalSolString = "no path";
+                    PrintWriter pWriter = new PrintWriter("output.txt");
                     pWriter.println(finalSolString);
                     pWriter.close();
                     return;
@@ -40,14 +43,11 @@ public class Main {
                     finalSolString += item;
                     finalSolString += '-';
                 }
-
-
-
                 finalSolString += finalSolution.getValue();
                 StringBuilder sBuilder = new StringBuilder(finalSolString);
                 int index = finalSolString.lastIndexOf('-');
                 sBuilder.setCharAt(index,' ');
-                PrintWriter writer = new PrintWriter("myoutput.txt");
+                PrintWriter writer = new PrintWriter("output.txt");
                 writer.println(sBuilder.toString());
                 writer.close();
             } else {
@@ -55,7 +55,7 @@ public class Main {
                 Pair<ArrayList<String>, Integer> finalSolution = astar.runAlgo();
                 if(finalSolution == null) {
                     String finalSolString ="no path";
-                    PrintWriter pWriter = new PrintWriter("myoutput.txt");
+                    PrintWriter pWriter = new PrintWriter("output.txt");
                     pWriter.println(finalSolString);
                     pWriter.close();
                     return;
@@ -70,7 +70,7 @@ public class Main {
                 finalSolString += finalSolution.getValue();
                 StringBuilder sBuilder = new StringBuilder(finalSolString);
                 sBuilder.setCharAt(index,' ');
-                PrintWriter writer = new PrintWriter("myoutput.txt");
+                PrintWriter writer = new PrintWriter("output.txt");
                 writer.println(sBuilder.toString());
                 writer.close();
             }

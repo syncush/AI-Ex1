@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class IDS {
@@ -9,18 +7,18 @@ public class IDS {
     private ArrayList<AbstractTile> duplicateList;
 
     public IDS()  {
-        this.start = Main.start;
-        this.end = Main.end;
+        this.start = java_ex1.start;
+        this.end = java_ex1.end;
         duplicateList = new ArrayList<>();
     }
 
     public Pair<ArrayList<String>, Integer> runAlgo() {
-        int size = Main.matrix[0].length * Main.matrix[0].length;
+        int size = java_ex1.matrix[0].length * java_ex1.matrix[0].length;
         ArrayList<AbstractTile> path = new ArrayList<>();
         path.add(this.start);
         for (int i = 0; i < size; i++) {
-            duplicateList.add(Main.start);
-            if(runDLS(Main.start,Main.end, i, path)) {
+            duplicateList.add(java_ex1.start);
+            if(runDLS(java_ex1.start,java_ex1.end, i, path)) {
                 return backTracePath();
             }
         }
@@ -77,7 +75,7 @@ public class IDS {
             duplicateList.remove(start);
             return false;
         }
-        ArrayList<AbstractTile> neighbors = start.getNeighbors(Main.matrix[0].length, Main.matrix);
+        ArrayList<AbstractTile> neighbors = start.getNeighbors(java_ex1.matrix[0].length, java_ex1.matrix);
         for (AbstractTile item : neighbors) {
             if (!duplicateList.contains(item)) {
                 duplicateList.add(item);
